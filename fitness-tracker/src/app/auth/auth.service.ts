@@ -6,6 +6,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 
 import { AuthData } from "./auth-data.model";
 import { TrainingService } from "../training/training.service";
+import { UIService } from "../shared/ui.service";
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,8 @@ export class AuthService {
     constructor(
         private router: Router,
         private auth: Auth = inject(Auth),
-        private trainingService: TrainingService
+        private trainingService: TrainingService,
+        private uiService: UIService
     ) { }
 
     initAuthListener() {
@@ -34,30 +36,37 @@ export class AuthService {
     }
 
     registerUser(authData: AuthData) {
+        this.uiService.loadingStatusChange.next(true);
         this.auth = getAuth();
         createUserWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
+                this.uiService.loadingStatusChange.next(false);
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorMessage);
+                const errorMessage = error.message;               
+                this.uiService.showSnackBar(errorCode, null, 3000);
+                this.uiService.loadingStatusChange.next(false);
+
             });
     }
 
     loginUser(authData: AuthData) {
+        this.uiService.loadingStatusChange.next(true);
         this.auth = getAuth();
         signInWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
+                this.uiService.loadingStatusChange.next(false);
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;
-                console.log(errorMessage);
+                const errorMessage = error.message;               
+                this.uiService.showSnackBar(errorCode, null, 3000);
+                this.uiService.loadingStatusChange.next(false);
             });
     }
 

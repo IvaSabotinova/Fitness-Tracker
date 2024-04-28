@@ -5,8 +5,9 @@ import { collectionData, Firestore } from '@angular/fire/firestore';
 import { Timestamp } from '@angular/fire/firestore';
 
 import { Exercise } from './exercise.model';
+import { UIService } from '../shared/ui.service';
 
-Injectable()
+@Injectable()
 export class TrainingService {
     private availableExercises: Exercise[] = [];
     // { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
@@ -21,15 +22,22 @@ export class TrainingService {
     private db: Firestore = inject(Firestore);
     private fbSubscriptions: Subscription[] = [];
 
+    constructor(private uiService: UIService) { }
+
     fetchAvailableExercises() {
         //return this.availableExercises.slice();
-        const exercisesCollection = collection(this.db, 'AvailableExercises'); // get a reference to the AvailableExercises collection    
+        this.uiService.loadingStatusChange.next(true);
+        const exercisesCollection = collection(this.db, 'AvailableExercises'); // get a reference to the AvailableExercises collection 
         const exercises$ = collectionData(exercisesCollection) as Observable<Exercise[]>; // get documents (data) from the collection
         this.fbSubscriptions.push(exercises$.subscribe((result) => {
             this.availableExercises = result;
             this.availableExercisesChange.next([...this.availableExercises]);
+            this.uiService.loadingStatusChange.next(false);
         }, error => {
             console.log(error);
+            this.uiService.showSnackBar('Fetching exercises failed. Please try again!', null, 3000)
+            this.uiService.loadingStatusChange.next(false);
+            this.availableExercisesChange.next(null);
         }));
     }
 
