@@ -1,0 +1,13 @@
+.nav-caption {
+    display: inline-block;
+    padding-left: 6px;
+}
+
+.nav-logout {
+    font-size: 15px;
+   
+}
+
+.logout{
+    padding: 0 2px;
+}

@@ -1,0 +1,16 @@
+<!-- <button mat-raised-button color="accent">
+    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home">Home</mat-icon>Click me!
+</button> -->
+
+<mat-sidenav-container>
+    <mat-sidenav #sideNav role="navigation">
+       <app-sidenav-list (sideNav)="sideNav.toggle()"></app-sidenav-list>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <app-header (sideNavEl)="sideNav.toggle()"></app-header>
+        <!-- <button (click)="sideNav.toggle()">Show Sidenav</button>  -->
+        <main>
+            <router-outlet></router-outlet>
+        </main>
+    </mat-sidenav-content>
+</mat-sidenav-container>
