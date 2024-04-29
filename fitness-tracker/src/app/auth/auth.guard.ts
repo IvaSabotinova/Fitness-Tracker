@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { GuardResult, MaybeAsync, Router } from "@angular/router";
+import { CanLoad, GuardResult, MaybeAsync, Route, Router, UrlSegment } from "@angular/router";
 
 import { AuthService } from "./auth.service";
 
@@ -11,6 +11,12 @@ export class AuthGuard {
 
     //canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult>: deprecated interface CanActivate
     canActivate(): MaybeAsync<GuardResult> {
+        if (!this.authService.isAuth()) {
+            return this.router.navigate(['/login'])
+        }     
+    }
+
+    canLoad(route: Route, segments: UrlSegment[]): MaybeAsync<GuardResult> {
         if (!this.authService.isAuth()) {
             return this.router.navigate(['/login'])
         }     

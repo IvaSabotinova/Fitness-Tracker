@@ -7,19 +7,19 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { FirestoreModule, getFirestore, provideFirestore } from '@angular/fire/firestore';
 
+import { MaterialModule } from './material.module';
+import { AuthModule } from './auth/auth.module';
+import { AppRoutingModule } from './app-routing.module';
+import { TrainingModule } from './training/training.module';
 
 import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service';
-import { AppRoutingModule } from './app-routing.module';
-import { MaterialModule } from './material.module';
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 import { environment } from '../environments/environment';
 import { UIService } from './shared/ui.service';
-import { AuthModule } from './auth/auth.module';
-import { TrainingModule } from './training/training.module';
 
 
 @NgModule({
@@ -42,7 +42,7 @@ import { TrainingModule } from './training/training.module';
     // AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,  
     AuthModule,
-    TrainingModule
+   // TrainingModule
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
