@@ -3,10 +3,14 @@ import { Injectable, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { Auth, authState } from '@angular/fire/auth';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { Store } from "@ngrx/store";
 
+import * as fromApp from '../app.reducer';
+import * as uiActions from '../shared/ui.actions';
 import { AuthData } from "./auth-data.model";
 import { TrainingService } from "../training/training.service";
 import { UIService } from "../shared/ui.service";
+
 
 @Injectable()
 export class AuthService {
@@ -17,7 +21,8 @@ export class AuthService {
         private router: Router,
         private auth: Auth = inject(Auth),
         private trainingService: TrainingService,
-        private uiService: UIService
+        private uiService: UIService,
+        private store: Store<fromApp.State>
     ) { }
 
     initAuthListener() {
@@ -36,37 +41,48 @@ export class AuthService {
     }
 
     registerUser(authData: AuthData) {
-        this.uiService.loadingStatusChange.next(true);
+        // this.uiService.loadingStatusChange.next(true);
+       // this.store.dispatch({ type: 'START_LOADING' });
+        this.store.dispatch(new uiActions.StartLoading());
         this.auth = getAuth();
         createUserWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
-                this.uiService.loadingStatusChange.next(false);
+                //this.uiService.loadingStatusChange.next(false);
+               // this.store.dispatch({ type: 'STOP_LOADING' });
+                this.store.dispatch(new uiActions.StopLoading());
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;               
+                const errorMessage = error.message;
                 this.uiService.showSnackBar(errorCode, null, 3000);
-                this.uiService.loadingStatusChange.next(false);
-
+                // this.uiService.loadingStatusChange.next(false);
+              //  this.store.dispatch({ type: 'STOP_LOADING' });
+                this.store.dispatch(new uiActions.StopLoading());
             });
     }
 
     loginUser(authData: AuthData) {
-        this.uiService.loadingStatusChange.next(true);
+        //this.uiService.loadingStatusChange.next(true);
+       // this.store.dispatch({ type: 'START_LOADING' });
+        this.store.dispatch(new uiActions.StartLoading());
         this.auth = getAuth();
         signInWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
                 console.log(user);
-                this.uiService.loadingStatusChange.next(false);
+                // this.uiService.loadingStatusChange.next(false);
+               // this.store.dispatch({ type: 'STOP_LOADING' });
+                this.store.dispatch(new uiActions.StopLoading());
             })
             .catch((error) => {
                 const errorCode = error.code;
-                const errorMessage = error.message;               
+                const errorMessage = error.message;
                 this.uiService.showSnackBar(errorCode, null, 3000);
-                this.uiService.loadingStatusChange.next(false);
+               //this.uiService.loadingStatusChange.next(false);
+               //this.store.dispatch({ type: 'STOP_LOADING' });
+               this.store.dispatch(new uiActions.StopLoading());
             });
     }
 
