@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private uiService: UIService,
-    private store: Store<fromApp.State>
+    private store: Store<fromApp.State>,
   ) { }
 
   ngOnInit(): void {

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { AuthService } from '../../auth/auth.service';
+import * as fromApp from '../../app.reducer';
 
 @Component({
   selector: 'app-header',
@@ -10,16 +12,18 @@ import { AuthService } from '../../auth/auth.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   @Output() sideNavEl = new EventEmitter<void>();
-  isAuth = false;
+  //isAuth = false;
   authSubscription: Subscription;
+  isAuth$: Observable<boolean>;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private store: Store<fromApp.State>) { }
 
 
   ngOnInit(): void {
-   this.authSubscription = this.authService.authChange.subscribe(authStatus => {
-      this.isAuth = authStatus
-    });
+  //  this.authSubscription = this.authService.authChange.subscribe(authStatus => {
+  //     this.isAuth = authStatus
+  //   });
+     this.isAuth$ = this.store.select(fromApp.getIsAuth);
   }
 
   sideNavToggle() {
@@ -31,6 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.authSubscription.unsubscribe();
+   // this.authSubscription.unsubscribe();
   }
 }
