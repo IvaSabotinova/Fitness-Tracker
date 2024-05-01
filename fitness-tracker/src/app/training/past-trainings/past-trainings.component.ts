@@ -1,11 +1,13 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
+import { Store } from '@ngrx/store';
 
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
+import * as fromTraining from '../training.reducer';
 
 @Component({
   selector: 'app-past-trainings',
@@ -15,18 +17,23 @@ import { TrainingService } from '../training.service';
 export class PastTrainingsComponent implements OnInit, AfterViewInit, OnDestroy {
   displayedColumns = ['date', 'name', 'calories', 'duration', 'state']
   dataSource = new MatTableDataSource<Exercise>();
-  pastExercisesSubscription: Subscription
+  // pastExercisesSubscription: Subscription;
+  finishedExercises$: Observable<Exercise[]>;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private trainingService: TrainingService) { } 
+  constructor(private trainingService: TrainingService, private store: Store<fromTraining.State>) { }
 
   ngOnInit(): void {
-   this.trainingService.fetchCompletedOrCancelledExercises();
-   this.pastExercisesSubscription = this.trainingService.pastExercisesChange.subscribe((pastExercises: Exercise[]) => {
-      this.dataSource.data = pastExercises;
+    this.trainingService.fetchCompletedOrCancelledExercises();
+    //  this.pastExercisesSubscription = this.trainingService.pastExercisesChange.subscribe((pastExercises: Exercise[]) => {
+    //     this.dataSource.data = pastExercises;
+    //   })
+    this.store.select(fromTraining.getFinishedExercises).subscribe(result => {
+      this.dataSource.data = result
     })
+
   }
 
   ngAfterViewInit(): void {
@@ -39,8 +46,8 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    if(this.pastExercisesSubscription){
-      this.pastExercisesSubscription.unsubscribe();
-    }
+    // if(this.pastExercisesSubscription){
+    //   this.pastExercisesSubscription.unsubscribe();
+    // }
   }
 }

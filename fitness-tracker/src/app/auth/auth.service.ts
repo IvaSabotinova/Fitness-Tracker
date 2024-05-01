@@ -1,4 +1,3 @@
-import { Subject } from "rxjs";
 import { Injectable, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import { Auth, authState } from '@angular/fire/auth';
@@ -6,9 +5,8 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { Store } from "@ngrx/store";
 
 import * as fromApp from '../app.reducer';
-import * as uiActions from '../shared/ui.actions';
-import * as fromAuth from './auth.reducer';
-import * as authActions from './auth.actions';
+import * as UI from '../shared/ui.actions';
+import * as AUTH from './auth.actions';
 import { AuthData } from "./auth-data.model";
 import { TrainingService } from "../training/training.service";
 import { UIService } from "../shared/ui.service";
@@ -17,7 +15,7 @@ import { UIService } from "../shared/ui.service";
 @Injectable()
 export class AuthService {
    // authChange = new Subject<boolean>();
-    private isAuthenticated = false;
+   // private isAuthenticated = false;
 
     constructor(
         private router: Router,
@@ -31,15 +29,15 @@ export class AuthService {
         authState(this.auth).subscribe(user => {
             if (user) {
                 // this.isAuthenticated = true;
-                this.store.dispatch(new authActions.SetAuthenticated())
                 // this.authChange.next(true);
+                this.store.dispatch(new AUTH.SetAuthenticated())
                 this.router.navigate(['/training'])
             } else {
                 this.trainingService.cancelFbSubscriptions();
-                //  this.authChange.next(false);
-                this.store.dispatch(new authActions.SetUnauthenticated())
-                this.router.navigate(['/login']);
                 // this.isAuthenticated = false;
+                //  this.authChange.next(false);
+                this.store.dispatch(new AUTH.SetUnauthenticated())
+                this.router.navigate(['/login']);
             }
         })
     }
@@ -47,7 +45,7 @@ export class AuthService {
     registerUser(authData: AuthData) {
         // this.uiService.loadingStatusChange.next(true);
         // this.store.dispatch({ type: 'START_LOADING' });
-        this.store.dispatch(new uiActions.StartLoading());
+        this.store.dispatch(new UI.StartLoading());
         this.auth = getAuth();
         createUserWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
@@ -55,7 +53,7 @@ export class AuthService {
                 console.log(user);
                 //this.uiService.loadingStatusChange.next(false);
                 // this.store.dispatch({ type: 'STOP_LOADING' });
-                this.store.dispatch(new uiActions.StopLoading());
+                this.store.dispatch(new UI.StopLoading());
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -63,14 +61,14 @@ export class AuthService {
                 this.uiService.showSnackBar(errorCode, null, 3000);
                 // this.uiService.loadingStatusChange.next(false);
                 //  this.store.dispatch({ type: 'STOP_LOADING' });
-                this.store.dispatch(new uiActions.StopLoading());
+                this.store.dispatch(new UI.StopLoading());
             });
     }
 
     loginUser(authData: AuthData) {
         //this.uiService.loadingStatusChange.next(true);
         // this.store.dispatch({ type: 'START_LOADING' });
-        this.store.dispatch(new uiActions.StartLoading());
+        this.store.dispatch(new UI.StartLoading());
         this.auth = getAuth();
         signInWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
@@ -78,7 +76,7 @@ export class AuthService {
                 console.log(user);
                 // this.uiService.loadingStatusChange.next(false);
                 // this.store.dispatch({ type: 'STOP_LOADING' });
-                this.store.dispatch(new uiActions.StopLoading());
+                this.store.dispatch(new UI.StopLoading());
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -86,7 +84,7 @@ export class AuthService {
                 this.uiService.showSnackBar(errorCode, null, 3000);
                 //this.uiService.loadingStatusChange.next(false);
                 //this.store.dispatch({ type: 'STOP_LOADING' });
-                this.store.dispatch(new uiActions.StopLoading());
+                this.store.dispatch(new UI.StopLoading());
             });
     }
 

@@ -3,7 +3,7 @@
         <mat-card fxFlex.xs="100%" fxFlex="400px">
             <mat-card-title fxLayoutAlign="center">Time to start a workout</mat-card-title>
             <mat-card-content fxLayoutAlign="center">
-                <mat-form-field *ngIf="!isLoading && exercises" >
+                <mat-form-field *ngIf="!(isLoading$ | async) && exercises$ | async">
                     <mat-select placeholder="Choose Exercise" ngModel name="exerciseId" required>
                         <!-- @for (food of foods; track food) {
                     <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
@@ -12,16 +12,17 @@
                     <mat-option value="touch-toes">Touch Toes</mat-option>
                     <mat-option value="side-lunges">Side Lunges</mat-option>
                     <mat-option value="burpees">Burpees</mat-option> -->
-                        <mat-option *ngFor="let exercise of exercises;" [value]="exercise.id">
+                        <mat-option *ngFor="let exercise of exercises$ | async;" [value]="exercise.id">
                             {{exercise.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-spinner *ngIf="isLoading"></mat-spinner>
+                <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
             </mat-card-content>
             <mat-card-actions fxLayoutAlign="center">
-                <button *ngIf="!isLoading && exercises" type="submit" mat-button [disabled]="form.invalid">Start</button>              
-                <button *ngIf="isLoading" type="button" mat-button (click)="fetchExercises()">Fetch Again!</button>              
+                <button *ngIf="exercises$ | async" type="submit" mat-button [disabled]="form.invalid">Start</button>
+                <button *ngIf="!(exercises$ | async)" type="button" mat-button (click)="fetchExercises()">Fetch
+                    Again!</button>
             </mat-card-actions>
         </mat-card>
     </form>

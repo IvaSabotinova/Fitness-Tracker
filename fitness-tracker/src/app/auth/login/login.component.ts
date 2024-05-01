@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription, map } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs-compat';
 
@@ -17,7 +16,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   // isLoading = false;
   isLoading$: Observable<boolean>;
-  private loadingStatusSubscription: Subscription
+ //private loadingStatusSubscription: Subscription
 
   constructor(
     private authService: AuthService,
@@ -36,10 +35,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     // this.loadingStatusSubscription = this.uiService.loadingStatusChange.subscribe(status => {
-      //   this.isLoading = status;
-      // })
+    //     this.isLoading = status;
+    //   })
 
-     // this.isLoading$ = this.store.pipe(map(state => state.ui.isLoading));
+    //this.isLoading$ = this.store.pipe(map(state => state.ui.isLoading));
      this.isLoading$ = this.store.select(fromApp.getIsLoading);
   }
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { AuthService } from '../../auth/auth.service';
@@ -13,7 +13,7 @@ import * as fromApp from '../../app.reducer';
 export class HeaderComponent implements OnInit, OnDestroy {
   @Output() sideNavEl = new EventEmitter<void>();
   //isAuth = false;
-  authSubscription: Subscription;
+  //authSubscription: Subscription;
   isAuth$: Observable<boolean>;
 
   constructor(private authService: AuthService, private store: Store<fromApp.State>) { }

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { AuthService } from '../../auth/auth.service';
@@ -14,7 +14,7 @@ export class SidenavListComponent implements OnInit, OnDestroy {
   @Output() sideNav = new EventEmitter<void>();
   //isAuth = false;
   isAuth$: Observable<boolean>;
-  authSubscription: Subscription
+  //authSubscription: Subscription
 
   constructor(private authService: AuthService, private store: Store<fromApp.State>) { }
 
