@@ -15,7 +15,6 @@ import * as fromTraining from '../training.reducer';
 export class CurrentTrainingComponent implements OnInit {
   progress = 0;
   timer: any;
-  //  @Output() trainingExit = new EventEmitter();
 
   constructor(private dialog: MatDialog, private trainingService: TrainingService, private store: Store<fromTraining.State>) { }
 
@@ -46,7 +45,6 @@ export class CurrentTrainingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        //  this.trainingExit.emit();
         this.trainingService.cancelExercise(this.progress);
       } else {
         this.startOrResumeTimer();

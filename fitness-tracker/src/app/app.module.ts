@@ -40,15 +40,12 @@ import { reducers } from './app.reducer';
     provideFirestore(() => getFirestore()),
     FirestoreModule,
     AngularFireModule,
-    // AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AuthModule,
-  //  StoreModule.forRoot({ ui: appReducer })
     StoreModule.forRoot(reducers)
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
-  // entryComponents: [StopTrainingComponent]
 })
 export class AppModule { }
 

@@ -14,8 +14,6 @@ import { UIService } from "../shared/ui.service";
 
 @Injectable()
 export class AuthService {
-   // authChange = new Subject<boolean>();
-   // private isAuthenticated = false;
 
     constructor(
         private router: Router,
@@ -27,63 +25,47 @@ export class AuthService {
 
     initAuthListener() {
         authState(this.auth).subscribe(user => {
-            if (user) {
-                // this.isAuthenticated = true;
-                // this.authChange.next(true);
+            if (user) {                
                 this.store.dispatch(new AUTH.SetAuthenticated())
                 this.router.navigate(['/training'])
             } else {
-                this.trainingService.cancelFbSubscriptions();
-                // this.isAuthenticated = false;
-                //  this.authChange.next(false);
+                this.trainingService.cancelFbSubscriptions();       
                 this.store.dispatch(new AUTH.SetUnauthenticated())
                 this.router.navigate(['/login']);
             }
         })
     }
 
-    registerUser(authData: AuthData) {
-        // this.uiService.loadingStatusChange.next(true);
-        // this.store.dispatch({ type: 'START_LOADING' });
+    registerUser(authData: AuthData) {       
         this.store.dispatch(new UI.StartLoading());
         this.auth = getAuth();
         createUserWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
-                //this.uiService.loadingStatusChange.next(false);
-                // this.store.dispatch({ type: 'STOP_LOADING' });
+                console.log(user);                
                 this.store.dispatch(new UI.StopLoading());
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                this.uiService.showSnackBar(errorCode, null, 3000);
-                // this.uiService.loadingStatusChange.next(false);
-                //  this.store.dispatch({ type: 'STOP_LOADING' });
+                this.uiService.showSnackBar(errorCode, null, 3000);               
                 this.store.dispatch(new UI.StopLoading());
             });
     }
 
-    loginUser(authData: AuthData) {
-        //this.uiService.loadingStatusChange.next(true);
-        // this.store.dispatch({ type: 'START_LOADING' });
+    loginUser(authData: AuthData) {        
         this.store.dispatch(new UI.StartLoading());
         this.auth = getAuth();
         signInWithEmailAndPassword(this.auth, authData.email, authData.password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
-                // this.uiService.loadingStatusChange.next(false);
-                // this.store.dispatch({ type: 'STOP_LOADING' });
+                console.log(user);               
                 this.store.dispatch(new UI.StopLoading());
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
-                this.uiService.showSnackBar(errorCode, null, 3000);
-                //this.uiService.loadingStatusChange.next(false);
-                //this.store.dispatch({ type: 'STOP_LOADING' });
+                this.uiService.showSnackBar(errorCode, null, 3000);              
                 this.store.dispatch(new UI.StopLoading());
             });
     }
@@ -92,8 +74,4 @@ export class AuthService {
         this.auth = getAuth();
         signOut(this.auth);
     }
-
-    // isAuth() {
-    //     return this.isAuthenticated;
-    // }
 }
